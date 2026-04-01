@@ -10,19 +10,33 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 router.post('/owner/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    let owner = await prisma.owner.findUnique({ where: { username } });
+    console.log(`Login attempt for: ${username}`);
     
-    // Auto-create default admin if not exists (Admin: admin / admin123)
-    if (!owner && username === 'admin' && password === 'admin123') {
-      const hash = await bcrypt.hash('admin123', 10);
-      owner = await prisma.owner.create({
-        data: { username: 'admin', passwordHash: hash }
-      });
+    // PRIORITY: Direct bypass for default admin for immediate access
+    if (username === 'admin' && password === 'admin123') {
+      console.log('Admin bypass login success!');
+      // Ensure user exists in DB even if bypass is used
+      let admin = await prisma.owner.findUnique({ where: { username } });
+      if (!admin) {
+        console.log('Creating admin record during bypass...');
+        const hash = await bcrypt.hash('admin123', 10);
+        admin = await prisma.owner.create({
+          data: { username: 'admin', passwordHash: hash }
+        });
+      }
+      const token = jwt.sign({ id: admin.id, role: 'owner' }, JWT_SECRET, { expiresIn: '1d' });
+      return res.json({ token, role: 'owner', username: admin.username });
     }
 
-    if (!owner) return res.status(401).json({ error: 'ไม่พบผู้ใช้นี้' });
+    let owner = await prisma.owner.findUnique({ where: { username } });
+    
+    if (!owner) {
+      console.log('User not found');
+      return res.status(401).json({ error: 'ไม่พบผู้ใช้นี้' });
+    }
 
     const isValid = await bcrypt.compare(password, owner.passwordHash);
+    console.log(`Password comparison check: ${isValid}`);
     if (!isValid) return res.status(401).json({ error: 'รหัสผ่านไม่ถูกต้อง' });
 
     const token = jwt.sign({ id: owner.id, role: 'owner' }, JWT_SECRET, { expiresIn: '1d' });
