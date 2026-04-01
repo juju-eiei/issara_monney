@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import api from '../../api';
 import { Phone, Lock } from 'lucide-react';
 
 export default function CustomerLogin() {

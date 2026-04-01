@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import api from '../../api';
 import { User, Lock } from 'lucide-react';
 
-export default function OwnerLogin() {
+export default function AdminLogin() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -13,8 +13,8 @@ export default function OwnerLogin() {
     e.preventDefault();
     try {
       const res = await api.post('/auth/owner/login', { username, password });
-      localStorage.setItem('ownerToken', res.data.token);
-      navigate('/owner/dashboard');
+      localStorage.setItem('adminToken', res.data.token);
+      navigate('/admin/dashboard');
     } catch (err) {
       setError(err.response?.data?.error || 'เข้าสู่ระบบไม่สำเร็จ');
     }
@@ -23,7 +23,7 @@ export default function OwnerLogin() {
   return (
     <div className="card" style={{ maxWidth: '400px', margin: '40px auto' }}>
       <h2 className="text-center" style={{ fontSize: '1.8rem', marginBottom: '10px' }}>ระบบจัดการร้าน</h2>
-      <p className="text-center text-muted mb-4">สำหรับเจ้าของร้านอิสระเฟอร์นิเจอร์</p>
+      <p className="text-center text-muted mb-4">สำหรับแอดมินอิสระเฟอร์นิเจอร์</p>
       
       {error && <div className="text-danger mb-4 text-center">{error}</div>}
       

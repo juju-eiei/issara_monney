@@ -1,27 +1,24 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 
-function Navbar() {
+function AdminNavbar() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const isOwner = location.pathname.includes('/owner');
 
   const logout = () => {
-    localStorage.removeItem(isOwner ? 'ownerToken' : 'customerToken');
-    localStorage.removeItem('customerData');
-    navigate(isOwner ? '/owner' : '/customer');
+    localStorage.removeItem('adminToken');
+    navigate('/admin');
   };
 
-  const hasToken = isOwner ? !!localStorage.getItem('ownerToken') : !!localStorage.getItem('customerToken');
+  const hasToken = !!localStorage.getItem('adminToken');
 
   return (
     <nav style={{ background: 'var(--primary)', padding: '16px 20px', color: 'white', boxShadow: 'var(--shadow-md)' }}>
       <div className="container flex justify-between items-center">
         <h1 
           style={{ margin: 0, fontSize: '1.6rem', cursor: 'pointer', fontWeight: 600, lineHeight: 1.2 }} 
-          onClick={() => navigate(isOwner ? (hasToken ? '/owner/dashboard' : '/owner') : (hasToken ? '/customer/dashboard' : '/customer'))}
+          onClick={() => navigate(hasToken ? '/admin/dashboard' : '/admin')}
         >
-          ⭐ อิสระเฟอร์นิเจอร์
+          ⚙️ ระบบจัดการร้าน - อิสระเฟอร์นิเจอร์
         </h1>
         {hasToken && (
           <button 
@@ -49,4 +46,4 @@ function Navbar() {
   );
 }
 
-export default Navbar;
+export default AdminNavbar;

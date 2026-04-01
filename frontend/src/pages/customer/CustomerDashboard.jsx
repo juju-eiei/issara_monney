@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import api from '../../api';
 import { Gift, TrendingUp, History, Coins } from 'lucide-react';
 
 export default function CustomerDashboard() {

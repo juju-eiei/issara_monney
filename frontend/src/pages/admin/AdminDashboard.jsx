@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import api from '../api';
+import api from '../../api';
 import { Users, TrendingUp, HandCoins, Search, PlusCircle, CheckCircle } from 'lucide-react';
 
-export default function OwnerDashboard() {
+export default function AdminDashboard() {
   const [dashboard, setDashboard] = useState({ totalCustomers: 0, totalSales: 0, totalRewardsRedeemed: 0, totalCashGiven: 0 });
   const [searchPhone, setSearchPhone] = useState('');
   const [customer, setCustomer] = useState(null);
@@ -21,8 +21,8 @@ export default function OwnerDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem('ownerToken')) {
-      navigate('/owner');
+    if (!localStorage.getItem('adminToken')) {
+      navigate('/admin');
       return;
     }
     fetchDashboard();
@@ -99,7 +99,7 @@ export default function OwnerDashboard() {
 
   return (
     <div style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '40px' }}>
-      <h2 style={{ fontSize: '1.5rem', marginBottom: '20px', fontWeight: 'bold' }}>แดชบอร์ดเจ้าของร้าน (Admin)</h2>
+      <h2 style={{ fontSize: '1.5rem', marginBottom: '20px', fontWeight: 'bold' }}>แดชบอร์ดแอดมิน (Admin)</h2>
       
       <div className="grid grid-cols-2" style={{ marginBottom: '20px' }}>
         <div className="card text-center mb-0">
