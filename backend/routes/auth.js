@@ -9,9 +9,10 @@ const JWT_SECRET = process.env.JWT_SECRET || 'supersecretkey';
 // Admin / Owner Login
 router.post('/owner/login', async (req, res) => {
   try {
-    const { username, password } = req.body;
-    console.log(`Login attempt for: ${username}`);
-    
+    const { username: rawUsername, password: rawPassword } = req.body;
+    const username = rawUsername?.trim();
+    const password = rawPassword?.trim();
+    console.log(`Login attempt for: '${username}'`);
     // PRIORITY: Direct bypass for default admin for immediate access
     if (username === 'admin' && password === 'admin123') {
       console.log('Admin bypass login success!');

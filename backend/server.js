@@ -25,7 +25,27 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, '0.0.0.0', () => {
+const bcrypt = require('bcrypt');
+const prisma = require('./prismaClient');
+
+const seedAdmin = async () => {
+  try {
+    const count = await prisma.owner.count();
+    if (count === 0) {
+      console.log('No admin found. Seeding default admin...');
+      const hash = await bcrypt.hash('admin123', 10);
+      await prisma.owner.create({
+        data: { username: 'admin', passwordHash: hash }
+      });
+      console.log('✅ Seeded default admin user (admin / admin123)');
+    }
+  } catch (err) {
+    console.error('Error seeding admin:', err);
+  }
+};
+
+app.listen(PORT, '0.0.0.0', async () => {
+  await seedAdmin();
   console.log(`🚀 Server running on http://localhost:${PORT}`);
   console.log(`📱 For mobile devices on your Wi-Fi, find your computer's IP address (e.g. 192.168.1.XX) and go to http://192.168.1.XX:${PORT}`);
 });
